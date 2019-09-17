@@ -45,7 +45,6 @@ public class Human extends Animal {
         if (this.getHumanMoveTogether()!=null){
             this.getHumanMoveTogether().setHumanMoveTogether(null);
             this.setHumanMoveTogether(null);
-
         }
     }
 
