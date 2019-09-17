@@ -4,6 +4,11 @@ public class Human extends Animal {
     public Human(Double x, Double y, Double z) {
         super(x, y, z);
     }
+
+    public Human(Double[] xyz) {
+        super(xyz);
+    }
+
     private String name;
     enum emotionalState {DESPAIR, OK, HYPNOTIZED}
     private Integer strength;

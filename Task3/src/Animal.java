@@ -4,6 +4,10 @@ public class Animal extends MaterialObject{
         super(x, y, z);
     }
 
+    public Animal(Double[] xyz){
+        super(xyz);
+    }
+
     public void move(Double x, Double y, Double z){
         this.setX(x);
         this.setY(y);

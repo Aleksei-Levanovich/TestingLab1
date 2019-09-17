@@ -15,4 +15,9 @@ public class Door extends MaterialObject {
         this.isOpened=isOpened;
         this.strengthToOpen=strengthToOpen;
     }
+    public Door(boolean isOpened, Integer strengthToOpen, Double[] xyz){
+        super(xyz);
+        this.isOpened=isOpened;
+        this.strengthToOpen=strengthToOpen;
+    }
 }
