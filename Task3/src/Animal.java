@@ -9,4 +9,9 @@ public class Animal extends MaterialObject{
         this.setY(y);
         this.setZ(z);
     }
+    public void moveToObject(MaterialObject object){
+        this.setX(object.getX());
+        this.setY(object.getY());
+        this.setZ(object.getZ());
+    }
 }

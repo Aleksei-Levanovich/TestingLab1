@@ -12,6 +12,18 @@ public class MaterialObject {
         this.x = x;
     }
 
+    public Double getX() {
+        return x;
+    }
+
+    public Double getY() {
+        return y;
+    }
+
+    public Double getZ() {
+        return z;
+    }
+
     public void setY(Double y) {
         this.y = y;
     }

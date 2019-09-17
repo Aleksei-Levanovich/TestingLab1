@@ -49,7 +49,8 @@ public class Human extends Animal {
         }
     }
 
-    public void moveTo(Double x, Double y, Double z){
+    @Override
+    public void move(Double x, Double y, Double z){
         this.setX(x);
         this.setY(y);
         this.setZ(z);
@@ -57,6 +58,18 @@ public class Human extends Animal {
             this.humanMoveTogether.setX(x);
             this.humanMoveTogether.setY(y);
             this.humanMoveTogether.setZ(z);
+        }
+    }
+
+    @Override
+    public void moveToObject(MaterialObject object){
+        this.setX(object.getX());
+        this.setY(object.getY());
+        this.setZ(object.getZ());
+        if (this.humanMoveTogether!=null){
+            this.humanMoveTogether.setX(object.getX());
+            this.humanMoveTogether.setY(object.getY());
+            this.humanMoveTogether.setZ(object.getZ());
         }
     }
 
