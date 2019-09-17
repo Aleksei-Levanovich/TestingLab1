@@ -10,7 +10,8 @@ public class Door extends MaterialObject {
     public Integer getStrengthToOpen(){
         return this.strengthToOpen;
     }
-    public Door(boolean isOpened, Integer strengthToOpen){
+    public Door(boolean isOpened, Integer strengthToOpen, Double x, Double y, Double z){
+        super(x,y,z);
         this.isOpened=isOpened;
         this.strengthToOpen=strengthToOpen;
     }
