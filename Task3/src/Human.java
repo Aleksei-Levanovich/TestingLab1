@@ -7,7 +7,7 @@ public class Human extends Animal {
     private String name;
     enum emotionalState {DESPAIR, OK, HYPNOTIZED}
     private Integer strength;
-    private ArrayList<Human> handHoldBy;
+    private Human humanMoveTogether;
     private emotionalState EmotionalState;
 
     public void setEmotionalState(emotionalState emotionalState) {
@@ -22,7 +22,51 @@ public class Human extends Animal {
         this.strength = strength;
     }
 
-    public void setHandHoldBy(ArrayList<Human> handHoldBy) {
-        this.handHoldBy = handHoldBy;
+    public void setHumanMoveTogether(Human humanMoveTogether) {
+        this.humanMoveTogether = humanMoveTogether;
+    }
+
+    public Human getHumanMoveTogether() {
+        return humanMoveTogether;
+    }
+
+    public Integer getStrength() {
+        return strength;
+    }
+
+    public void holdHand(Human human){
+        if (this.humanMoveTogether==null && human.getHumanMoveTogether()==null){
+            this.humanMoveTogether=human;
+            human.setHumanMoveTogether(this);
+        }
+    }
+
+    public void unholdHand(){
+        if (this.getHumanMoveTogether()!=null){
+            this.getHumanMoveTogether().setHumanMoveTogether(null);
+            this.setHumanMoveTogether(null);
+
+        }
+    }
+
+    public void moveTo(Double x, Double y, Double z){
+        this.setX(x);
+        this.setY(y);
+        this.setZ(z);
+        if (this.humanMoveTogether!=null){
+            this.humanMoveTogether.setX(x);
+            this.humanMoveTogether.setY(y);
+            this.humanMoveTogether.setZ(z);
+        }
+    }
+
+    public void openDoor(Door door){
+        Integer strength = this.getStrength();
+        if (this.getHumanMoveTogether()!=null){
+            strength+=this.humanMoveTogether.getStrength();
+        }
+        if (strength>=door.getStrengthToOpen()) {
+            door.setIsOpened(true);
+        }
     }
 }
