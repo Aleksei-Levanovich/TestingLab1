@@ -49,6 +49,18 @@ public class Tests {
     }
 
     @Test
+    public void testUnholdHand(){
+        Human human = new Human(xyz);
+        Human human1 = new Human(xyz1);
+        human.holdHand(human1);
+        human1.unholdHand();
+        assertAll("Checks unhold hand",
+                () -> assertEquals(human.getHumanMoveTogether(),null),
+                () -> assertEquals(human1.getHumanMoveTogether(),null)
+        );
+    }
+
+    @Test
     public void testMoveTogether(){
         Human human = new Human(xyz);
         Human human1 = new Human(xyz1);
