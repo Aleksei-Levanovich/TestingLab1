@@ -40,7 +40,10 @@ public class Human extends Animal {
     }
 
     public void holdHand(Human human){
-        if (this.humanMoveTogether==null && human.getHumanMoveTogether()==null){
+        if (this.humanMoveTogether==null && human.getHumanMoveTogether()==null &&
+                (Math.abs(human.getX()-this.getX())<=1) &&
+                (Math.abs(human.getY()-this.getY())<=1) &&
+                (Math.abs(human.getZ()-this.getZ())<=1)){
             this.humanMoveTogether=human;
             human.setHumanMoveTogether(this);
         }
