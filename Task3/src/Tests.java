@@ -41,10 +41,10 @@ public class Tests {
         human2.holdHand(human3);
         human.holdHand(human3);
         assertAll("Checks human hold hand",
-                () -> assertEquals(human.getHumanMoveTogether(),human1),
-                () -> assertEquals(human1.getHumanMoveTogether(),human),
-                () -> assertEquals(human2.getHumanMoveTogether(),null),
-                () -> assertEquals(human3.getHumanMoveTogether(),null)
+                () -> assertEquals(human1, human.getHumanMoveTogether()),
+                () -> assertEquals(human, human1.getHumanMoveTogether()),
+                () -> assertEquals(null, human2.getHumanMoveTogether()),
+                () -> assertEquals(null, human3.getHumanMoveTogether())
         );
     }
 
@@ -55,8 +55,8 @@ public class Tests {
         human.holdHand(human1);
         human1.unholdHand();
         assertAll("Checks unhold hand",
-                () -> assertEquals(human.getHumanMoveTogether(),null),
-                () -> assertEquals(human1.getHumanMoveTogether(),null)
+                () -> assertEquals(null, human.getHumanMoveTogether()),
+                () -> assertEquals(null, human1.getHumanMoveTogether())
         );
     }
 
@@ -68,12 +68,38 @@ public class Tests {
         MaterialObject object = new MaterialObject(xyz2);
         human.moveToObject(object);
         assertAll("Checks XYZ of humans",
-                () -> assertEquals(human.getX(),object.getX()),
+                () -> assertEquals(object.getX(),human.getX()),
                 () -> assertEquals(human.getX(),human1.getX()),
-                () -> assertEquals(human.getY(),object.getY()),
+                () -> assertEquals(object.getY(),human.getY()),
                 () -> assertEquals(human.getY(),human1.getY()),
-                () -> assertEquals(human.getZ(),object.getZ()),
+                () -> assertEquals(object.getZ(),human.getZ()),
                 () -> assertEquals(human.getZ(),human1.getZ())
         );
+    }
+
+    @Test
+    public void openDoor(){
+        Human human = new Human(xyz);
+        Door door = new Door(false,100,xyz2);
+        human.setStrength(99);
+        human.openDoor(door);
+        assertEquals(false,door.getIsOpened());
+        human.moveToObject(door);
+        human.openDoor(door);
+        assertEquals(false,door.getIsOpened());
+        Human human1 = new Human(xyz2);
+        human1.setStrength(1);
+        human1.holdHand(human);
+        human.openDoor(door);
+        assertEquals(true, door.getIsOpened());
+    }
+
+    @Test
+    public void testHypnotize(){
+        Human human = new Human(xyz);
+        human.setEmotionalState(Human.emotionalState.OK);
+        FlyingRodent flyingRodent = new FlyingRodent(xyz1);
+        flyingRodent.hypnotize(human);
+        assertEquals(human.getEmotionalState(), Human.emotionalState.HYPNOTIZED);
     }
 }

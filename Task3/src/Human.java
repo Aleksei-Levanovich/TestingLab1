@@ -23,6 +23,14 @@ public class Human extends Animal {
         this.name = name;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public emotionalState getEmotionalState() {
+        return EmotionalState;
+    }
+
     public void setStrength(Integer strength) {
         this.strength = strength;
     }
@@ -85,7 +93,12 @@ public class Human extends Animal {
         if (this.getHumanMoveTogether()!=null){
             strength+=this.humanMoveTogether.getStrength();
         }
-        if (strength>=door.getStrengthToOpen()) {
+        if (strength>=door.getStrengthToOpen() &&
+            Math.abs(this.getX()-door.getX())<=1 &&
+            Math.abs(this.getY()-door.getY())<=1 &&
+            Math.abs(this.getZ()-door.getZ())<=1
+        )
+        {
             door.setIsOpened(true);
         }
     }
