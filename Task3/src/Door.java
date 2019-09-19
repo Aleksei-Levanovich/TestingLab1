@@ -21,7 +21,7 @@ public class Door extends MaterialObject {
         return this.strengthToOpen;
     }
 
-    public Door(boolean isOpened, Integer strengthToOpen, double x, double y, double z){
+    public Door(boolean isOpened, int strengthToOpen, double x, double y, double z){
         super(x,y,z);
         this.isOpened=isOpened;
         checkStrength(strengthToOpen);
