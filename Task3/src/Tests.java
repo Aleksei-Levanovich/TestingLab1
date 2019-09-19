@@ -6,8 +6,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class Tests {
@@ -54,6 +53,14 @@ public class Tests {
     }
 
     @Test
+    public void testwrongXYZ(){
+        double[] arr = new double[]{1.4,3.3,2.45,2.0};
+        assertThrows(IllegalArgumentException.class, () -> {
+            human = new Human(arr);
+        },"Wrong amount of coords");
+    }
+
+    @Test
     public void testAnimalMoveToObject() {
         animal.moveToObject(door1);
         assertAll("Checks mobility of animal to object",
@@ -87,9 +94,24 @@ public class Tests {
     }
 
     @Test
+    public void testNullName(){
+        assertThrows(NullPointerException.class, () -> {
+            human.setName(null);
+        },"Name couldn't be null");
+    }
+
+    @Test
     public void testHoldHand() throws Exception {
         human.holdHand(human1);
         assertEquals(human1, human.getHumanMoveTogether());
+    }
+
+    @Test
+    public void testWrongHoldHand() throws Exception {
+        human.holdHand(human1);
+        assertThrows(IllegalStateException.class, () -> {
+            human.holdHand(human1);
+        });
     }
 
     @Test
@@ -100,6 +122,13 @@ public class Tests {
                 () -> assertEquals(null, human.getHumanMoveTogether()),
                 () -> assertEquals(null, human1.getHumanMoveTogether())
         );
+    }
+
+    @Test
+    public void testWrongUnholdHand() {
+        assertThrows(IllegalStateException.class, () -> {
+            human.unholdHand();
+        });
     }
 
     @Test
@@ -121,14 +150,71 @@ public class Tests {
             "99, 1",
             "100, 20",
             "10,99,",
-            "10000,1"
+            "100,1"
     })
-    public void openDoor(int a, int b) throws Exception {
+    public void testOpenDoorTogether(int a, int b) throws Exception {
         human.setStrength(a);
         human.moveToObject(door);
         human3.setStrength(b);
         human3.holdHand(human);
         human.openDoor(door);
+        assertEquals(true, door.getIsOpened());
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "9, 1",
+            "10, 20",
+            "1,9,",
+            "10,1"
+    })
+    public void testNotOpenDoorTogether(int a, int b) throws Exception {
+        human.setStrength(a);
+        human.moveToObject(door);
+        human3.setStrength(b);
+        human3.holdHand(human);
+        assertThrows(Exception.class, () -> {
+                human.openDoor(door);
+            },"To weak to open it together");
+    }
+
+    @Test
+    public void testDoorClosed(){
+        assertEquals(door.getIsOpened(), false);
+    }
+
+    @Test
+    public void testOpenedDoorWeak(){
+        human.setStrength(10);
+        human.moveToObject(door);
+        assertThrows(Exception.class, () -> {
+                human.openDoor(door);
+            });
+    }
+
+    @Test
+    public void testOpenedDoorAlready() throws Exception {
+        human.setStrength(100);
+        human.moveToObject(door);
+        human.openDoor(door);
+        assertThrows(IllegalStateException.class, () -> {
+            human.openDoor(door);
+        });
+    }
+
+    @Test
+    public void testWrongOpenedDoorFarAway() {
+        human.setStrength(100);
+        assertThrows(Exception.class, () -> {
+            human.openDoor(door);
+        });
+    }
+
+    @Test
+    public void testWrongHoldHandFarAway() {
+        assertThrows(Exception.class, () -> {
+            human.holdHand(human3);
+        });
     }
 
     @Test
@@ -136,5 +222,11 @@ public class Tests {
         human.setEmotionalState(Human.EmotionalState.OK);
         flyingRodent.hypnotize(human);
         assertEquals(human.getEmotionalState(), Human.EmotionalState.HYPNOTIZED);
+    }
+
+    @Test
+    public void testNotHypnotized(){
+        human.setEmotionalState(Human.EmotionalState.OK);
+        assertNotEquals(Human.EmotionalState.HYPNOTIZED,human.getEmotionalState());
     }
 }
