@@ -19,6 +19,9 @@ public class Human extends Animal {
     }
 
     public void setName(String name) {
+        if (name==null) {
+            throw new NullPointerException("Name should not be null");
+        }
         this.name = name;
     }
 
