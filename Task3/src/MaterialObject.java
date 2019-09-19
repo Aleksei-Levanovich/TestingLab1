@@ -1,42 +1,43 @@
 public class MaterialObject {
-    private Double x;
-    private Double y;
-    private Double z;
-    public MaterialObject(Double x, Double y, Double z){
+    private double x;
+    private double y;
+    private double z;
+
+    public MaterialObject(double x, double y, double z){
         this.x=x;
         this.y=y;
         this.z=z;
     }
 
-    public MaterialObject(Double[] xyz){
+    public MaterialObject(double[] xyz){
         if (xyz.length==3){
             this.x=xyz[0];
             this.y=xyz[1];
             this.z=xyz[2];
-        }
+        } else throw new IllegalArgumentException("Array should be 3 elements length");
     }
 
-    public void setX(Double x) {
-        this.x = x;
-    }
-
-    public Double getX() {
+    public double getX() {
         return x;
     }
 
-    public Double getY() {
+    public double getY() {
         return y;
     }
 
-    public Double getZ() {
+    public double getZ() {
         return z;
     }
 
-    public void setY(Double y) {
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    public void setY(double y) {
         this.y = y;
     }
 
-    public void setZ(Double z) {
+    public void setZ(double z) {
         this.z = z;
     }
 }

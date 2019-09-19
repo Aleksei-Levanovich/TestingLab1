@@ -1,38 +1,50 @@
-import java.util.ArrayList;
-
 public class Human extends Animal {
-    public Human(Double x, Double y, Double z) {
+
+    public Human(double x, double y, double z) {
         super(x, y, z);
     }
 
-    public Human(Double[] xyz) {
+    public Human(double[] xyz) {
         super(xyz);
     }
 
     private String name;
-    enum emotionalState {DESPAIR, OK, HYPNOTIZED}
-    private Integer strength;
+    enum EmotionalState {DESPAIR, OK, HYPNOTIZED}
+    private int strength;
     private Human humanMoveTogether;
-    private emotionalState EmotionalState;
+    private EmotionalState emotionalState;
 
-    public void setEmotionalState(emotionalState emotionalState) {
-        this.EmotionalState = emotionalState;
+    public void setEmotionalState(EmotionalState emotionalState) {
+        this.emotionalState = emotionalState;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
+    public boolean checkDistance(MaterialObject object, MaterialObject object1) throws Exception {
+        if (Math.abs(object.getX()-object1.getX())<=1 &&
+                Math.abs(object.getY()-object1.getY())<=1 &&
+                Math.abs(object.getZ()-object1.getZ())<=1){
+            return true;
+        }
+        else {
+            throw new Exception("Distance between objects should be less or equal to 1 in each coordinates");
+        }
+    }
+
     public String getName() {
         return name;
     }
 
-    public emotionalState getEmotionalState() {
-        return EmotionalState;
+    public EmotionalState getEmotionalState() {
+        return emotionalState;
     }
 
-    public void setStrength(Integer strength) {
-        this.strength = strength;
+    public void setStrength(int strength) {
+        if (strength>=0) {
+            this.strength = strength;
+        } else throw new IllegalStateException("Strength should be more or equal to 0");
     }
 
     public void setHumanMoveTogether(Human humanMoveTogether) {
@@ -43,29 +55,26 @@ public class Human extends Animal {
         return humanMoveTogether;
     }
 
-    public Integer getStrength() {
+    public int getStrength() {
         return strength;
     }
 
-    public void holdHand(Human human){
-        if (this.humanMoveTogether==null && human.getHumanMoveTogether()==null &&
-                (Math.abs(human.getX()-this.getX())<=1) &&
-                (Math.abs(human.getY()-this.getY())<=1) &&
-                (Math.abs(human.getZ()-this.getZ())<=1)){
+    public void holdHand(Human human) throws Exception {
+        if (this.humanMoveTogether==null && human.getHumanMoveTogether()==null && checkDistance(this,human)){
             this.humanMoveTogether=human;
             human.setHumanMoveTogether(this);
-        }
+        } else throw new IllegalStateException("Human is already holding the hand");
     }
 
     public void unholdHand(){
         if (this.getHumanMoveTogether()!=null){
             this.getHumanMoveTogether().setHumanMoveTogether(null);
             this.setHumanMoveTogether(null);
-        }
+        } else throw new IllegalStateException("Human holds nobody's hand");
     }
 
     @Override
-    public void move(Double x, Double y, Double z){
+    public void move(double x, double y, double z){
         this.setX(x);
         this.setY(y);
         this.setZ(z);
@@ -88,18 +97,15 @@ public class Human extends Animal {
         }
     }
 
-    public void openDoor(Door door){
+    public void openDoor(Door door) throws Exception {
         Integer strength = this.getStrength();
         if (this.getHumanMoveTogether()!=null){
             strength+=this.humanMoveTogether.getStrength();
         }
-        if (strength>=door.getStrengthToOpen() &&
-            Math.abs(this.getX()-door.getX())<=1 &&
-            Math.abs(this.getY()-door.getY())<=1 &&
-            Math.abs(this.getZ()-door.getZ())<=1
-        )
-        {
+        if (strength>=door.getStrengthToOpen() && checkDistance(this,door) && !door.getIsOpened()) {
             door.setIsOpened(true);
-        }
+        } else if(strength<door.getStrengthToOpen()){
+            throw new Exception("Too weak to open the door");
+        } else throw new IllegalStateException("Door is already opened");
     }
 }

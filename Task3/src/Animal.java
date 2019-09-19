@@ -1,14 +1,14 @@
 public class Animal extends MaterialObject{
 
-    public Animal(Double x, Double y, Double z) {
+    public Animal(double x, double y, double z) {
         super(x, y, z);
     }
 
-    public Animal(Double[] xyz){
+    public Animal(double[] xyz){
         super(xyz);
     }
 
-    public void move(Double x, Double y, Double z){
+    public void move(double x, double y, double z){
         this.setX(x);
         this.setY(y);
         this.setZ(z);

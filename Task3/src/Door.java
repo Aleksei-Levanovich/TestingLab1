@@ -1,23 +1,35 @@
 public class Door extends MaterialObject {
+
     private boolean isOpened;
-    private Integer strengthToOpen;
+    private int strengthToOpen;
+
+    public void checkStrength(int strengthToOpen){
+        if (strengthToOpen>=0) {
+            this.strengthToOpen=strengthToOpen;
+        } else throw new IllegalStateException("Strength to open should be more or equal to 0");
+    }
+
     public void setIsOpened(boolean isOpened){
         this.isOpened=isOpened;
     }
+
     public boolean getIsOpened(){
         return this.isOpened;
     }
-    public Integer getStrengthToOpen(){
+
+    public int getStrengthToOpen(){
         return this.strengthToOpen;
     }
-    public Door(boolean isOpened, Integer strengthToOpen, Double x, Double y, Double z){
+
+    public Door(boolean isOpened, Integer strengthToOpen, double x, double y, double z){
         super(x,y,z);
         this.isOpened=isOpened;
-        this.strengthToOpen=strengthToOpen;
+        checkStrength(strengthToOpen);
     }
-    public Door(boolean isOpened, Integer strengthToOpen, Double[] xyz){
+
+    public Door(boolean isOpened, int strengthToOpen, double[] xyz){
         super(xyz);
         this.isOpened=isOpened;
-        this.strengthToOpen=strengthToOpen;
+        checkStrength(strengthToOpen);
     }
 }

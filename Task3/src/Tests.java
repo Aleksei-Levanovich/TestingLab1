@@ -8,12 +8,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class Tests {
-    private Double xyz[] = new Double[]{1.1, 2.22222, 3.444};
-    private Double xyz1[] = new Double[]{1.0, 2.0, 3.0};
-    private Double xyz2[] = new Double[]{8.6, 66.22, 366.4};
+    private double xyz[] = new double[]{1.1, 2.22222, 3.444};
+    private double xyz1[] = new double[]{1.0, 2.0, 3.0};
+    private double xyz2[] = new double[]{8.6, 66.22, 366.4};
 
     private Human human, human1, human2, human3;
-    private Door door;
+    private Door door, door1;
     private Animal animal;
     private FlyingRodent flyingRodent;
     private MaterialObject materialObject, materialObject1;
@@ -21,9 +21,10 @@ public class Tests {
     public void setUp() {
         human = new Human(xyz);
         human1 = new Human(xyz1);
-        human2 = new Human(xyz);
+        human2 = new Human(1.1, 2.22222, 3.444);
         human3 = new Human(xyz2);
         door = new Door(false, 100, xyz2);
+        door1 = new Door(false, 0, 1.2,2.3,3.0);
         animal = new Animal(xyz);
         flyingRodent = new FlyingRodent(xyz1);
         materialObject = new MaterialObject(xyz);
@@ -52,12 +53,11 @@ public class Tests {
 
     @Test
     public void testAnimalMoveToObject() {
-        animal.moveToObject(door);
-        Double testXYZ[] = new Double[]{animal.getX(), animal.getY(), animal.getZ()};
+        animal.moveToObject(door1);
         assertAll("Checks mobility of animal to object",
-                () -> assertEquals(xyz2[0], testXYZ[0]),
-                () -> assertEquals(xyz2[1], testXYZ[1]),
-                () -> assertEquals(xyz2[2], testXYZ[2])
+                () -> assertEquals(door1.getX(), animal.getX()),
+                () -> assertEquals(door1.getY(), animal.getY()),
+                () -> assertEquals(door1.getZ(), animal.getZ())
         );
     }
 
@@ -72,20 +72,19 @@ public class Tests {
     }
 
     @Test
-    public void testHoldHand() {
-        human.holdHand(human1);
-        human2.holdHand(human3);
-        human.holdHand(human3);
-        assertAll("Checks human hold hand",
-                () -> assertEquals(human1, human.getHumanMoveTogether()),
-                () -> assertEquals(human, human1.getHumanMoveTogether()),
-                () -> assertEquals(null, human2.getHumanMoveTogether()),
-                () -> assertEquals(null, human3.getHumanMoveTogether())
-        );
+    public void testName(){
+        human.setName("Alex");
+        assertEquals("Alex", human.getName());
     }
 
     @Test
-    public void testUnholdHand() {
+    public void testHoldHand() throws Exception {
+        human.holdHand(human1);
+        assertEquals(human1, human.getHumanMoveTogether());
+    }
+
+    @Test
+    public void testUnholdHand() throws Exception {
         human.holdHand(human1);
         human1.unholdHand();
         assertAll("Checks unhold hand",
@@ -95,7 +94,7 @@ public class Tests {
     }
 
     @Test
-    public void testMoveTogether() {
+    public void testMoveTogether() throws Exception {
         human.holdHand(human1);
         human.moveToObject(materialObject1);
         assertAll("Checks XYZ of humans",
@@ -109,23 +108,18 @@ public class Tests {
     }
 
     @Test
-    public void openDoor() {
+    public void openDoor() throws Exception {
         human.setStrength(99);
-        human.openDoor(door);
-        assertEquals(false, door.getIsOpened());
         human.moveToObject(door);
-        human.openDoor(door);
-        assertEquals(false, door.getIsOpened());
         human3.setStrength(1);
         human3.holdHand(human);
         human.openDoor(door);
-        assertEquals(true, door.getIsOpened());
     }
 
     @Test
     public void testHypnotize() {
-        human.setEmotionalState(Human.emotionalState.OK);
+        human.setEmotionalState(Human.EmotionalState.OK);
         flyingRodent.hypnotize(human);
-        assertEquals(human.getEmotionalState(), Human.emotionalState.HYPNOTIZED);
+        assertEquals(human.getEmotionalState(), Human.EmotionalState.HYPNOTIZED);
     }
 }
