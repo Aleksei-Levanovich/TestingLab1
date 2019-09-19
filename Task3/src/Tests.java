@@ -2,6 +2,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -43,11 +46,10 @@ public class Tests {
 
     @Test
     public void testSetXYZ() {
-        Double testXYZ[] = new Double[]{materialObject.getX(), materialObject.getY(), materialObject.getZ()};
         assertAll("Checks setting of XYZ to object",
-                () -> assertEquals(xyz[0], testXYZ[0]),
-                () -> assertEquals(xyz[1], testXYZ[1]),
-                () -> assertEquals(xyz[2], testXYZ[2])
+                () -> assertEquals(xyz[0], materialObject.getX()),
+                () -> assertEquals(xyz[1], materialObject.getY()),
+                () -> assertEquals(xyz[2], materialObject.getZ())
         );
     }
 
@@ -61,20 +63,27 @@ public class Tests {
         );
     }
 
-    @Test
-    public void testAnimalMove() {
-        animal.move(2.0, 2.0, 2.0);
+    @ParameterizedTest
+    @CsvSource({
+            "2.0, 2.0, 2.0",
+            "2.3333, 32.333, 5565.3333",
+            "-1.222, -2.33, -3.333",
+            "-2, -4, -5"
+    })
+    public void testAnimalMove(double x, double y, double z) {
+        animal.move(x,y,z);
         assertAll("Checks mobility of animal",
-                () -> assertEquals(2.0, animal.getX()),
-                () -> assertEquals(2.0, animal.getY()),
-                () -> assertEquals(2.0, animal.getZ())
+                () -> assertEquals(x, animal.getX()),
+                () -> assertEquals(y, animal.getY()),
+                () -> assertEquals(z, animal.getZ())
         );
     }
 
-    @Test
-    public void testName(){
-        human.setName("Alex");
-        assertEquals("Alex", human.getName());
+    @ParameterizedTest
+    @ValueSource(strings = {"Alex","Roman"})
+    public void testName(String name){
+        human.setName(name);
+        assertEquals(name, human.getName());
     }
 
     @Test
@@ -107,11 +116,17 @@ public class Tests {
         );
     }
 
-    @Test
-    public void openDoor() throws Exception {
-        human.setStrength(99);
+    @ParameterizedTest
+    @CsvSource({
+            "99, 1",
+            "100, 20",
+            "10,99,",
+            "10000,1"
+    })
+    public void openDoor(int a, int b) throws Exception {
+        human.setStrength(a);
         human.moveToObject(door);
-        human3.setStrength(1);
+        human3.setStrength(b);
         human3.holdHand(human);
         human.openDoor(door);
     }
