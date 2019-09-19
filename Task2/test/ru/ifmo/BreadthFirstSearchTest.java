@@ -1,13 +1,14 @@
 package ru.ifmo;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collection;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static ru.ifmo.BreadthFirstSearch.breadthFirstSearch;
 
 @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
 public class BreadthFirstSearchTest {
@@ -17,7 +18,7 @@ public class BreadthFirstSearchTest {
         List<List<Integer>> adjacencyList = asList(asList(-1));
 
         assertThrows(IndexOutOfBoundsException.class,
-                () -> breadthFirstSearch(adjacencyList, 0));
+                () -> new BreadthFirstSearch(adjacencyList, 0).run());
     }
 
     @Test
@@ -25,7 +26,7 @@ public class BreadthFirstSearchTest {
         List<List<Integer>> adjacencyList = asList(asList(0));
 
         assertThrows(IndexOutOfBoundsException.class,
-                () -> breadthFirstSearch(adjacencyList, -1));
+                () -> new BreadthFirstSearch(adjacencyList, -1).run());
     }
 
     @Test
@@ -33,7 +34,7 @@ public class BreadthFirstSearchTest {
         List<List<Integer>> adjacencyList = asList(asList(1));
 
         assertThrows(IndexOutOfBoundsException.class,
-                () -> breadthFirstSearch(adjacencyList, 0));
+                () -> new BreadthFirstSearch(adjacencyList, 0).run());
     }
 
     @Test
@@ -43,7 +44,21 @@ public class BreadthFirstSearchTest {
         );
         boolean[] expectedResult = { true };
 
-        assertArrayEquals(expectedResult, breadthFirstSearch(adjacencyList, 0));
+        Collection<BreadthFirstSearch.LogItem> expectedLog = asList(
+                new BreadthFirstSearch.LogItem(0, new boolean[] {true})
+        );
+
+        checkResultAndLog(adjacencyList, 0, expectedResult, expectedLog);
+    }
+
+    private void checkResultAndLog(List<List<Integer>> adjacencyList, int startVertex, boolean[] expectedResult,
+                                   Collection<BreadthFirstSearch.LogItem> expectedLog) {
+        BreadthFirstSearch bfs = new BreadthFirstSearch(adjacencyList, startVertex);
+        boolean[] result = bfs.run();
+        assertArrayEquals(expectedResult, result);
+
+        Collection<BreadthFirstSearch.LogItem> logs = bfs.getLogs();
+        Assertions.assertEquals(expectedLog, logs);
     }
 
     @Test
@@ -53,8 +68,11 @@ public class BreadthFirstSearchTest {
                 asList()
         );
         boolean[] expectedResult = { true, true };
-
-        assertArrayEquals(expectedResult, breadthFirstSearch(adjacencyList, 0));
+        Collection<BreadthFirstSearch.LogItem> expectedLog = asList(
+                new BreadthFirstSearch.LogItem(0, new boolean[] {true, true}),
+                new BreadthFirstSearch.LogItem(1, new boolean[] {true, true})
+        );
+        checkResultAndLog(adjacencyList, 0, expectedResult, expectedLog);
     }
 
     @Test
@@ -64,8 +82,10 @@ public class BreadthFirstSearchTest {
                 asList(1)
         );
         boolean[] expectedResult = { true, false };
-
-        assertArrayEquals(expectedResult, breadthFirstSearch(adjacencyList, 0));
+        Collection<BreadthFirstSearch.LogItem> expectedLog = asList(
+                new BreadthFirstSearch.LogItem(0, new boolean[] {true, false})
+        );
+        checkResultAndLog(adjacencyList, 0, expectedResult, expectedLog);
     }
 
     @Test
@@ -80,7 +100,12 @@ public class BreadthFirstSearchTest {
         int startVertex = 1;
         boolean[] expectedResult = { false, true, false, true, true };
 
-        assertArrayEquals(expectedResult, breadthFirstSearch(adjacencyList, startVertex));
+        Collection<BreadthFirstSearch.LogItem> expectedLog = asList(
+                new BreadthFirstSearch.LogItem(1, new boolean[] {false, true, false, true, true}),
+                new BreadthFirstSearch.LogItem(3, new boolean[] {false, true, false, true, true}),
+                new BreadthFirstSearch.LogItem(4, new boolean[] {false, true, false, true, true})
+        );
+        checkResultAndLog(adjacencyList, startVertex, expectedResult, expectedLog);
     }
 
     @Test
@@ -95,7 +120,14 @@ public class BreadthFirstSearchTest {
         int startVertex = 0;
         boolean[] expectedResult = { true, true, true, true, false };
 
-        assertArrayEquals(expectedResult, breadthFirstSearch(adjacencyList, startVertex));
+        Collection<BreadthFirstSearch.LogItem> expectedLog = asList(
+                new BreadthFirstSearch.LogItem(0, new boolean[] {true, true, true, true, false}),
+                new BreadthFirstSearch.LogItem(1, new boolean[] {true, true, true, true, false}),
+                new BreadthFirstSearch.LogItem(2, new boolean[] {true, true, true, true, false}),
+                new BreadthFirstSearch.LogItem(3, new boolean[] {true, true, true, true, false})
+        );
+
+        checkResultAndLog(adjacencyList, startVertex, expectedResult, expectedLog);
     }
 
     @Test
@@ -108,7 +140,12 @@ public class BreadthFirstSearchTest {
         int startVertex = 0;
         boolean[] expectedResult = { true, true, false };
 
-        assertArrayEquals(expectedResult, breadthFirstSearch(adjacencyList, startVertex));
+        Collection<BreadthFirstSearch.LogItem> expectedLog = asList(
+                new BreadthFirstSearch.LogItem(0, new boolean[] {true, true, false}),
+                new BreadthFirstSearch.LogItem(1, new boolean[] {true, true, false}),
+                new BreadthFirstSearch.LogItem(1, new boolean[] {true, true, false})
+        );
+        checkResultAndLog(adjacencyList, startVertex, expectedResult, expectedLog);
     }
 
     @Test
@@ -119,7 +156,10 @@ public class BreadthFirstSearchTest {
         );
         int startVertex = 0;
         boolean[] expectedResult = { true, false };
+        Collection<BreadthFirstSearch.LogItem> expectedLog = asList(
+                new BreadthFirstSearch.LogItem(0, new boolean[] {true, false})
+        );
 
-        assertArrayEquals(expectedResult, breadthFirstSearch(adjacencyList, startVertex));
+        checkResultAndLog(adjacencyList, startVertex, expectedResult, expectedLog);
     }
 }
