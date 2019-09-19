@@ -8,9 +8,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class Tests {
-    private Double xyz[] = new Double[] {1.1,2.22222,3.444};
-    private Double xyz1[] = new Double[] {1.0,2.0,3.0};
-    private Double xyz2[] = new Double[] {8.6,66.22,366.4};
+    private Double xyz[] = new Double[]{1.1, 2.22222, 3.444};
+    private Double xyz1[] = new Double[]{1.0, 2.0, 3.0};
+    private Double xyz2[] = new Double[]{8.6, 66.22, 366.4};
 
     private Human human, human1, human2, human3;
     private Door door;
@@ -18,47 +18,61 @@ public class Tests {
     private FlyingRodent flyingRodent;
     private MaterialObject materialObject, materialObject1;
 
-    @BeforeAll
-    public void setUp(){
+    public void setUp() {
         human = new Human(xyz);
         human1 = new Human(xyz1);
         human2 = new Human(xyz);
         human3 = new Human(xyz2);
-        door = new Door(false,100,xyz2);
+        door = new Door(false, 100, xyz2);
         animal = new Animal(xyz);
         flyingRodent = new FlyingRodent(xyz1);
         materialObject = new MaterialObject(xyz);
         materialObject1 = new MaterialObject(xyz2);
     }
 
+    @BeforeAll
+    public void setStates() {
+        setUp();
+    }
+
     @AfterEach
-    public void returnStates(){
+    public void returnStates() {
         setUp();
     }
 
     @Test
-    public void testSetXYZ(){
-        Double testXYZ[] = new Double[]{materialObject.getX(),materialObject.getY(),materialObject.getZ()};
+    public void testSetXYZ() {
+        Double testXYZ[] = new Double[]{materialObject.getX(), materialObject.getY(), materialObject.getZ()};
         assertAll("Checks setting of XYZ to object",
-                () -> assertEquals(xyz[0],testXYZ[0]),
-                () -> assertEquals(xyz[1],testXYZ[1]),
-                () -> assertEquals(xyz[2],testXYZ[2])
+                () -> assertEquals(xyz[0], testXYZ[0]),
+                () -> assertEquals(xyz[1], testXYZ[1]),
+                () -> assertEquals(xyz[2], testXYZ[2])
         );
     }
 
     @Test
-    public void testAnimalMove(){
+    public void testAnimalMoveToObject() {
         animal.moveToObject(door);
-        Double testXYZ[] = new Double[]{animal.getX(),animal.getY(),animal.getZ()};
+        Double testXYZ[] = new Double[]{animal.getX(), animal.getY(), animal.getZ()};
         assertAll("Checks mobility of animal to object",
-                () -> assertEquals(xyz2[0],testXYZ[0]),
-                () -> assertEquals(xyz2[1],testXYZ[1]),
-                () -> assertEquals(xyz2[2],testXYZ[2])
+                () -> assertEquals(xyz2[0], testXYZ[0]),
+                () -> assertEquals(xyz2[1], testXYZ[1]),
+                () -> assertEquals(xyz2[2], testXYZ[2])
         );
     }
 
     @Test
-    public void testHoldHand(){
+    public void testAnimalMove() {
+        animal.move(2.0, 2.0, 2.0);
+        assertAll("Checks mobility of animal",
+                () -> assertEquals(2.0, animal.getX()),
+                () -> assertEquals(2.0, animal.getY()),
+                () -> assertEquals(2.0, animal.getZ())
+        );
+    }
+
+    @Test
+    public void testHoldHand() {
         human.holdHand(human1);
         human2.holdHand(human3);
         human.holdHand(human3);
@@ -71,7 +85,7 @@ public class Tests {
     }
 
     @Test
-    public void testUnholdHand(){
+    public void testUnholdHand() {
         human.holdHand(human1);
         human1.unholdHand();
         assertAll("Checks unhold hand",
@@ -81,27 +95,27 @@ public class Tests {
     }
 
     @Test
-    public void testMoveTogether(){
+    public void testMoveTogether() {
         human.holdHand(human1);
         human.moveToObject(materialObject1);
         assertAll("Checks XYZ of humans",
-                () -> assertEquals(materialObject1.getX(),human.getX()),
-                () -> assertEquals(human.getX(),human1.getX()),
-                () -> assertEquals(materialObject1.getY(),human.getY()),
-                () -> assertEquals(human.getY(),human1.getY()),
-                () -> assertEquals(materialObject1.getZ(),human.getZ()),
-                () -> assertEquals(human.getZ(),human1.getZ())
+                () -> assertEquals(materialObject1.getX(), human.getX()),
+                () -> assertEquals(human.getX(), human1.getX()),
+                () -> assertEquals(materialObject1.getY(), human.getY()),
+                () -> assertEquals(human.getY(), human1.getY()),
+                () -> assertEquals(materialObject1.getZ(), human.getZ()),
+                () -> assertEquals(human.getZ(), human1.getZ())
         );
     }
 
     @Test
-    public void openDoor(){
+    public void openDoor() {
         human.setStrength(99);
         human.openDoor(door);
-        assertEquals(false,door.getIsOpened());
+        assertEquals(false, door.getIsOpened());
         human.moveToObject(door);
         human.openDoor(door);
-        assertEquals(false,door.getIsOpened());
+        assertEquals(false, door.getIsOpened());
         human3.setStrength(1);
         human3.holdHand(human);
         human.openDoor(door);
@@ -109,7 +123,7 @@ public class Tests {
     }
 
     @Test
-    public void testHypnotize(){
+    public void testHypnotize() {
         human.setEmotionalState(Human.emotionalState.OK);
         flyingRodent.hypnotize(human);
         assertEquals(human.getEmotionalState(), Human.emotionalState.HYPNOTIZED);
